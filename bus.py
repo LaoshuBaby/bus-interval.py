@@ -6,20 +6,34 @@ source = "5:55、6:00*、6:20、6:40、7:00*、7:40、8:10、8:40、9:10*、9:40
 
 def parse(src: str) -> dict:
     schedule_raw=source.replace("*", "").replace("。", "").split("、")
+    pprint(schedule_raw)
     schedule_obj = [
         (lambda x: datetime.strptime(x, "%H:%M"))(t)
         for t in schedule_raw
     ]
-    # pprint(times)
+    # pprint(schedule_obj)
     intervals_raw = [
         int((schedule_obj[i + 1] - schedule_obj[i]).total_seconds() / 60)
         if i != len(schedule_obj) - 1
         else 0
         for i in range(len(schedule_obj))
     ]
-    # pprint(intervals)
-    intervals_count={}
-    default_interval=0
+    pprint(intervals_raw)
+    # 先进行段合并
+    interval_parts=[]
+    stay_pos=0
+    current_pos=0
+    for i in range(len(intervals_raw)):
+        if i<len(intervals_raw)-1:
+            if intervals_raw[current_pos+1]!=intervals_raw[current_pos]:
+                interval_parts.append([(schedule_obj[stay_pos],schedule_obj[current_pos+1]),intervals_raw[current_pos]])
+                stay_pos=current_pos+1
+            current_pos+=1
+    pprint(interval_parts)
+    # from collections import Counter
+    # intervals_count = Counter(intervals_raw)
+    # pprint(intervals_count)
+    # default_interval=0
 
 
 parse(source)

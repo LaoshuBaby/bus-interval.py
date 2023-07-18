@@ -3,12 +3,6 @@ from pprint import pprint
 
 source = "5:55、6:00*、6:20、6:40、7:00*、7:40、8:10、8:40、9:10*、9:40、10:10、10:40、11:10、11:40、12:20、13:00、13:30、14:00、14:30*、15:00、15:30、15:50*、16:10、16:30、16:50、17:20*、17:40、18:00、18:30、19:00。"
 
-def time_layout(datetime_obj:datetime, mode="%M"):
-    hour=datetime_obj.hour
-    minute=datetime_obj.hour
-    second=datetime_obj.second
-    return str(hour).zfill(2)+":"+str(minute).zfill(2)
-
 def parse(src: str) -> dict:
     schedule_raw=source.replace("*", "").replace("。", "").split("、")
     # pprint(schedule_raw)
@@ -34,13 +28,13 @@ def parse(src: str) -> dict:
                 interval_parts.append([(schedule_obj[stay_pos],schedule_obj[current_pos+1]),intervals_raw[current_pos]])
                 stay_pos=current_pos+1
             current_pos+=1
-    pprint(interval_parts)
+    # pprint(interval_parts)
     from collections import Counter
     intervals_count = dict(Counter([i[1] for i in interval_parts]))
     # print(intervals_count)    
     default_interval=max(list(intervals_count.items()), key=lambda x: x[1])[0]
     # print(default_interval)
-    print("opening_hours="+time_layout(schedule_obj[0])+"-"+time_layout(schedule_obj[-1]))
-    # print("interval="+)
+    print("opening_hours=Mo-Su "+schedule_obj[0].strftime("%H:%M")+"-"+schedule_obj[-1].strftime("%H:%M"))
+    print("interval="+datetime.strptime(str(default_interval).zfill(2),"%M").strftime("%H:%M"))
 
 parse(source)

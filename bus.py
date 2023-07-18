@@ -34,7 +34,8 @@ def parse(src: str) -> dict:
     # print(intervals_count)    
     default_interval=max(list(intervals_count.items()), key=lambda x: x[1])[0]
     # print(default_interval)
-    print("opening_hours=Mo-Su "+schedule_obj[0].strftime("%H:%M")+"-"+schedule_obj[-1].strftime("%H:%M"))
-    print("interval="+datetime.strptime(str(default_interval).zfill(2),"%M").strftime("%H:%M"))
+    print("opening_hours"+" = "+"Mo-Su "+schedule_obj[0].strftime("%H:%M")+"-"+schedule_obj[-1].strftime("%H:%M"))
+    print("interval"+" = "+datetime.strptime(str(default_interval).zfill(2),"%M").strftime("%H:%M")) # not %M:%S
+    print("interval:conditional"+" = "+"; ".join([datetime.strptime(str(t).zfill(2),"%M").strftime("%M:%S")+" @ "+"("+"Mo-Su "+",".join(["1"])+")" if t!=default_interval else "" for t in intervals_count]))
 
 parse(source)

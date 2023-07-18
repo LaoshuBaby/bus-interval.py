@@ -6,7 +6,7 @@ source = "5:55、6:00*、6:20、6:40、7:00*、7:40、8:10、8:40、9:10*、9:40
 
 def parse(src: str) -> dict:
     schedule_raw=source.replace("*", "").replace("。", "").split("、")
-    pprint(schedule_raw)
+    # pprint(schedule_raw)
     schedule_obj = [
         (lambda x: datetime.strptime(x, "%H:%M"))(t)
         for t in schedule_raw
@@ -18,7 +18,7 @@ def parse(src: str) -> dict:
         else 0
         for i in range(len(schedule_obj))
     ]
-    pprint(intervals_raw)
+    # pprint(intervals_raw)
     # 先进行段合并
     interval_parts=[]
     stay_pos=0
@@ -30,10 +30,16 @@ def parse(src: str) -> dict:
                 stay_pos=current_pos+1
             current_pos+=1
     pprint(interval_parts)
-    # from collections import Counter
-    # intervals_count = Counter(intervals_raw)
-    # pprint(intervals_count)
-    # default_interval=0
+    from collections import Counter
+    intervals_count = dict(Counter([i[1] for i in interval_parts]))
+    pprint(intervals_count)
+    default_interval=0
+    _max=0
+    for k in intervals_count:
+        if intervals_count[k]>_max:
+            _max=intervals_count[k]
+            default_interval=k
+    print(default_interval)
 
 
 parse(source)

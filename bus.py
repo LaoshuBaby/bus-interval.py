@@ -1,10 +1,8 @@
 from datetime import datetime
 from pprint import pprint
 
-source = "5:55、6:00*、6:20、6:40、7:00*、7:40、8:10、8:40、9:10*、9:40、10:10、10:40、11:10、11:40、12:20、13:00、13:30、14:00、14:30*、15:00、15:30、15:50*、16:10、16:30、16:50、17:20*、17:40、18:00、18:30、19:00。"
 
-
-def parse(src: str) -> dict:
+def parse(source: str) -> dict:
     schedule_raw = source.replace("*", "").replace("。", "").split("、")
     # pprint(schedule_raw)
     schedule_obj = [
@@ -45,6 +43,8 @@ def parse(src: str) -> dict:
         0
     ]
     # print(default_interval)
+
+    print("=" * 5 + "[PARSE RESULT]" + "=" * 15)
     print(
         "opening_hours"
         + " = "
@@ -69,7 +69,21 @@ def parse(src: str) -> dict:
                 + " @ "
                 + "("
                 + "Mo-Su "
-                + ",".join(["1"])
+                + ", ".join(
+                    list(
+                        filter(
+                            bool,
+                            [
+                                part[0][0].strftime("%H:%M")
+                                + "-"
+                                + part[0][1].strftime("%H:%M")
+                                if part[1] == t
+                                else None
+                                for part in interval_parts
+                            ],
+                        )
+                    )
+                )
                 + ")"
                 if t != default_interval
                 else ""
@@ -79,4 +93,5 @@ def parse(src: str) -> dict:
     )
 
 
-parse(source)
+source = ""
+parse(source if source != "" else input())

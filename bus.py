@@ -1,6 +1,9 @@
 from datetime import datetime
 from pprint import pprint
 
+def gtfs():
+    # https://github.com/starsep/gtfs-tczew
+    pass
 
 def parse(source: str) -> dict:
     schedule_raw = source.replace("*", "").replace("。", "").split("、")
